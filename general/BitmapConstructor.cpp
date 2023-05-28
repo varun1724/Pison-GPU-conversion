@@ -1,6 +1,4 @@
 #include "BitmapConstructor.h"
-#include <serialSpec/SerialBitmapIterator.h>
-#include <serialSpec/SerialBitmapConstuctor.h>
 
 Bitmap* BitmapConstructor::construct(Record* record, int thread_num, int level_num) {
     Bitmap* bm = NULL;

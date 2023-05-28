@@ -1,4 +1,4 @@
-#include "SerialBitmapConstuctor.h"
+#include "SerialBitmapConstructor.h"
 #include <string.h>
 #include <sys/time.h>
 #include <sys/file.h>

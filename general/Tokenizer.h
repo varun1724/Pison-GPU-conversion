@@ -1,5 +1,5 @@
 #ifndef TOKENIZER_H
-#define TONENIZER_H
+#define TOKENIZER_H
 
 #define IN 10
 #define OUT 11

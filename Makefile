@@ -1,0 +1,2 @@
+parser: testing/main.cpp serialSpec/SerialBitmap.cpp serialSpec/SerialBitmapConstructor.cpp serialSpec/SerialBitmapIterator.cpp general/BitmapConstructor.cpp general/RecordLoader.cpp general/Tokenizer.cpp
+	g++ -o parser testing/main.cpp serialSpec/SerialBitmap.cpp serialSpec/SerialBitmapConstructor.cpp serialSpec/SerialBitmapIterator.cpp general/BitmapConstructor.cpp general/RecordLoader.cpp general/Tokenizer.cpp

@@ -4,6 +4,8 @@
 #include <string>
 #include "Bitmap.h"
 #include "BitmapIterator.h"
+#include "../serialSpec/SerialBitmapConstructor.h"
+#include "../serialSpec/SerialBitmapIterator.h"
 #include "Records.h"
 using namespace std;
 
