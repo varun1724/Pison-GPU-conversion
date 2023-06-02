@@ -274,13 +274,13 @@ char* SerialBitmapIterator::getValue() {
     if (type == OBJECT && next_idx < mCtxInfo[mCurLevel].end_idx) {
         long start_pos = 0, end_pos = 0;
         if (findFieldQuotePos(next_pos, start_pos, end_pos) == false) {
-            return "";
+            return (char*)"";
         }
         // next quote
         next_pos = start_pos;
     }
     long text_length = next_pos - cur_pos - 1;
-    if (text_length <= 0) return "";
+    if (text_length <= 0) return (char*)"";
     char* ret = (char*)malloc(text_length + 1);
 ///    cout<<"cur pos "<<(cur_pos + 1)<<" length "<<text_length<<endl;
     memcpy(ret, mSerialBitmap->mRecord + cur_pos + 1, text_length);

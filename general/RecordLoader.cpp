@@ -5,6 +5,8 @@ using namespace std;
 
 #define MAX_PAD 64
 
+void* aligned_malloc(size_t, size_t);
+
 // Opens binary files
 // First have to convert the data to binary files??
 Record* RecordLoader::loadSingleRecord(char* file_path) {
@@ -16,8 +18,8 @@ Record* RecordLoader::loadSingleRecord(char* file_path) {
     fseek (fp, 0, SEEK_END);
     size = ftell(fp);
     rewind(fp);
-    void* p;
-    if (posix_memalign(&p, 64, (size + MAX_PAD)*sizeof(char)) != 0) {
+    void* p = __mingw_aligned_malloc(64, (size + MAX_PAD)*sizeof(char));
+    if (p == NULL) {
         cout<<"Fail to allocate memory space for input record."<<endl;
     }
     char* record_text = (char*) p;
@@ -45,7 +47,7 @@ Record* RecordLoader::loadSingleRecord(char* file_path) {
 
 
 
-RecordSet* RecordLoader::loadRecords(char* file_path) {
+RecordSet* RecordLoader::loadRecords(const char* file_path) {
     FILE *fp = fopen(file_path, "r");
     RecordSet* rs = new RecordSet();
     if (fp) {
@@ -72,8 +74,9 @@ RecordSet* RecordLoader::loadRecords(char* file_path) {
                 ++rs->num_recs;
             }
         }
-        void* p;
-        if(posix_memalign(&p, 64, str.size()*sizeof(char)) != 0) {
+        void* p = aligned_malloc(64, str.size()*sizeof(char));
+        //void* p;
+        if (p == NULL) {
             cout<<"Fail to allocate memory space for records from input file."<<endl;
         }
         for (int i = 0; i < rs->recs.size(); ++i) {
@@ -86,6 +89,21 @@ RecordSet* RecordLoader::loadRecords(char* file_path) {
         fclose(fp);
         return rs;
     }
+    printf("Error: %d (%s)\n", errno, strerror(errno));
     cout<<"Fail open the file."<<endl;
     return rs;
+}
+
+
+void* aligned_malloc(size_t alignment, size_t size) {
+
+    uintptr_t mask = alignment - 1;
+    void* ptr = malloc(size + alignment + sizeof(void*));
+    if (ptr) {
+        void* aligned_ptr = reinterpret_cast<void*>((reinterpret_cast<uintptr_t>(ptr) & ~mask) + alignment);
+        *(reinterpret_cast<void**>(aligned_ptr) - 1) = ptr;
+        return aligned_ptr;
+    } 
+
+    return nullptr;
 }

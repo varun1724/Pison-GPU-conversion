@@ -10,6 +10,7 @@
 #include <sys/file.h>
 #include <unistd.h>
 #include <sched.h>
+#include <malloc.h>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -19,7 +20,7 @@ using namespace std;
 class RecordLoader{
   public:
     static Record* loadSingleRecord(char* file_path);
-    static RecordSet* loadRecords(char* file_path);
+    static RecordSet* loadRecords(const char* file_path);
 
 };
 #endif

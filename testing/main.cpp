@@ -1,4 +1,4 @@
-#include "../general/RecordLoader.h"
+ #include "../general/RecordLoader.h"
 #include "../general/BitmapIterator.h"
 #include "../general/BitmapConstructor.h"
 
@@ -7,8 +7,9 @@ string query(BitmapIterator* iter) {
     string output = "";
     if (iter->isObject()) {
         unordered_set<char*> set;
-        set.insert("user");
-        set.insert("retweet_count");
+
+        set.insert((char*)"user");
+        set.insert((char*)"retweet_count");
         char* key = NULL;
         while ((key = iter->moveToKey(set)) != NULL) {
             if (strcmp(key, "retweet_count") == 0) {
@@ -18,7 +19,7 @@ string query(BitmapIterator* iter) {
                 if (value) free(value);
             } else {
                 if (iter->down() == false) continue;  /* value of "user" */
-                if (iter->isObject() && iter->moveToKey("id")) {
+                if (iter->isObject() && iter->moveToKey((char*)"id")) {
                     // value of "id"
                     char* value = iter->getValue();
                     output.append(value).append(";");
@@ -32,7 +33,8 @@ string query(BitmapIterator* iter) {
 }
 
 int main() {
-    char* file_path = "../dataset/twitter_sample_small_records.json";
+    cout << "Program reaches here" << endl;
+    const char* file_path = "dataset/twitter_sample_small_records.json";
     RecordSet* record_set = RecordLoader::loadRecords(file_path);
     if (record_set->size() == 0) {
         cout<<"record loading fails."<<endl;
@@ -54,7 +56,11 @@ int main() {
      */
     int num_recs = record_set->size();
     Bitmap* bm = NULL; 
+    cout << "Num_recs: " << num_recs << endl;
+    int counter = 0;
     for (int i = 0; i < num_recs; i++) {
+        cout << "Counter:" << counter << endl;
+        ++counter;
         bm = BitmapConstructor::construct((*record_set)[i], thread_num, level_num);
         BitmapIterator* iter = BitmapConstructor::getIterator(bm);
         output.append(query(iter));

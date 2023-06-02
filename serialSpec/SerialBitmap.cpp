@@ -154,8 +154,13 @@ void SerialBitmap::indexConstruction() {
             mQuoteBitmap[++top_word] = quote_bits;
         
             // step 3: build string mask bitmaps
-            str_mask = _mm_cvtsi128_si64(_mm_clmulepi64_si128(
-                _mm_set_epi64x(0ULL, quote_bits), _mm_set1_epi8(0xFFu), 0));
+            __m128i mulProduct = _mm_clmulepi64_si128(_mm_set_epi64x(0ULL, quote_bits), _mm_set1_epi8(0xFFu), 0); 
+
+            unsigned long value[2];
+            _mm_storeu_si128((__m128i*)value, mulProduct);
+
+            str_mask = value[0];
+            
             str_mask ^= prev_iter_inside_quote;
             prev_iter_inside_quote = static_cast<uint64_t>(static_cast<int64_t>(str_mask) >> 63);
 	

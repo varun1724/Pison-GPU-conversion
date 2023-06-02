@@ -1,2 +1,2 @@
 parser: testing/main.cpp serialSpec/SerialBitmap.cpp serialSpec/SerialBitmapConstructor.cpp serialSpec/SerialBitmapIterator.cpp general/BitmapConstructor.cpp general/RecordLoader.cpp general/Tokenizer.cpp
-	g++ -o parser testing/main.cpp serialSpec/SerialBitmap.cpp serialSpec/SerialBitmapConstructor.cpp serialSpec/SerialBitmapIterator.cpp general/BitmapConstructor.cpp general/RecordLoader.cpp general/Tokenizer.cpp
+	g++ -madx -msse4.1 -march=native -std=c++17 -o parser testing/main.cpp serialSpec/SerialBitmap.cpp serialSpec/SerialBitmapConstructor.cpp serialSpec/SerialBitmapIterator.cpp general/BitmapConstructor.cpp general/RecordLoader.cpp general/Tokenizer.cpp
