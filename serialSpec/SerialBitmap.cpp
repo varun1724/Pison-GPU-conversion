@@ -14,6 +14,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <pthread.h>
+#include <cstdint>
 #include <sys/time.h>
 #include <sys/file.h>
 #include <unistd.h>
@@ -58,13 +59,13 @@ SerialBitmap::~SerialBitmap()
     freeMemory();
 }
 
-void SerialBitmap::setRecordLength(long length) {
+void SerialBitmap::setRecordLength(long long length) {
     this->mRecordLength = length;
     this->mNumTmpWords = length / 32;
     this->mNumWords = length / 64;
     // allocate memory space for saving temporary results
     if (!mQuoteBitmap) {
-        mQuoteBitmap = (unsigned long*)malloc((mNumWords) * sizeof(unsigned long));
+        mQuoteBitmap = (unsigned long long*)malloc((mNumWords) * sizeof(unsigned long long));
     }
 }
 
@@ -80,14 +81,14 @@ void SerialBitmap::indexConstruction() {
     __m256i v_rbracket = _mm256_set1_epi8(0x5d);
 	
     // variables for saving temporary results in the first four steps
-    unsigned long colonbit0, quotebit0, escapebit0, stringbit0, lbracebit0, rbracebit0, commabit0, lbracketbit0, rbracketbit0;
-    unsigned long colonbit, quotebit, escapebit, stringbit, lbracebit, rbracebit, commabit, lbracketbit, rbracketbit;
-    unsigned long str_mask;
+    unsigned long long colonbit0, quotebit0, escapebit0, stringbit0, lbracebit0, rbracebit0, commabit0, lbracketbit0, rbracketbit0;
+    unsigned long long colonbit, quotebit, escapebit, stringbit, lbracebit, rbracebit, commabit, lbracketbit, rbracketbit;
+    unsigned long long str_mask;
 	
     // variables for saving temporary results in the last step
-    unsigned long lb_mask, rb_mask, cb_mask;
-    unsigned long lb_bit, rb_bit, cb_bit;
-    unsigned long first, second;
+    unsigned long long lb_mask, rb_mask, cb_mask;
+    unsigned long long lb_bit, rb_bit, cb_bit;
+    unsigned long long first, second;
     int cur_level = -1;
     int max_positive_level = -1;
 	
@@ -100,7 +101,7 @@ void SerialBitmap::indexConstruction() {
 
     for (int j = 0; j < mNumTmpWords; ++j) {
         colonbit = 0, quotebit = 0, escapebit = 0, stringbit = 0, lbracebit = 0, rbracebit = 0, commabit = 0, lbracketbit = 0, rbracketbit = 0;
-        unsigned long i = j * 32; 
+        unsigned long long i = j * 32; 
         // step 1: build structural character bitmaps
         __m256i v_text = _mm256_loadu_si256(reinterpret_cast<const __m256i *>(mRecord + i));
         colonbit = (unsigned)_mm256_movemask_epi8(_mm256_cmpeq_epi8(v_text, v_colon));
@@ -109,8 +110,8 @@ void SerialBitmap::indexConstruction() {
         lbracebit  = (unsigned)_mm256_movemask_epi8(_mm256_cmpeq_epi8(v_text, v_lbrace));
         rbracebit  = (unsigned)_mm256_movemask_epi8(_mm256_cmpeq_epi8(v_text, v_rbrace));
         commabit = (unsigned)_mm256_movemask_epi8(_mm256_cmpeq_epi8(v_text, v_comma));
-	lbracketbit = (unsigned)_mm256_movemask_epi8(_mm256_cmpeq_epi8(v_text, v_lbracket));
-	rbracketbit = (unsigned)_mm256_movemask_epi8(_mm256_cmpeq_epi8(v_text, v_rbracket));
+	    lbracketbit = (unsigned)_mm256_movemask_epi8(_mm256_cmpeq_epi8(v_text, v_lbracket));
+	    rbracketbit = (unsigned)_mm256_movemask_epi8(_mm256_cmpeq_epi8(v_text, v_rbracket));
         // first half of the word (lowest 32 bits)
         if(j % 2 == 0) {
             colonbit0 = colonbit;
@@ -142,7 +143,7 @@ void SerialBitmap::indexConstruction() {
             uint64_t even_carries = bs_bits + even_starts;
             int64_t odd_carries;
             bool iter_ends_odd_backslash = __builtin_uaddll_overflow(bs_bits, odd_starts,
-                (unsigned long long *)(&odd_carries));
+                (unsigned long long *)(&odd_carries)); // THIS POINTER WAS LONG LONG BEFORE, MEANING IT WAS 128 BITS? ONLY 64 NOW. BUT ALL POINTERS ARE 64 BITS??
             odd_carries |= prev_iter_ends_odd_backslash;
             prev_iter_ends_odd_backslash = iter_ends_odd_backslash ? 0x1ULL : 0x0ULL;
             uint64_t even_carry_ends = even_carries & ~bs_bits;
@@ -156,7 +157,7 @@ void SerialBitmap::indexConstruction() {
             // step 3: build string mask bitmaps
             __m128i mulProduct = _mm_clmulepi64_si128(_mm_set_epi64x(0ULL, quote_bits), _mm_set1_epi8(0xFFu), 0); 
 
-            unsigned long value[2];
+            unsigned long long value[2];
             _mm_storeu_si128((__m128i*)value, mulProduct);
 
             str_mask = value[0];
@@ -165,7 +166,7 @@ void SerialBitmap::indexConstruction() {
             prev_iter_inside_quote = static_cast<uint64_t>(static_cast<int64_t>(str_mask) >> 63);
 	
             // step 4: update structural character bitmaps
-            unsigned long tmp = (~str_mask);
+            unsigned long long tmp = (~str_mask);
             colonbit = colonbit & tmp;
             lbracebit = lbracebit & tmp;
             rbracebit = rbracebit & tmp;
@@ -182,10 +183,10 @@ void SerialBitmap::indexConstruction() {
             if (!cb_mask) {
                 if (cur_level >= 0 && cur_level <= mDepth) {
                     if (!mLevColonBitmap[cur_level]) {
-                        mLevColonBitmap[cur_level] = (unsigned long*)calloc(mNumWords, sizeof(unsigned long));
+                        mLevColonBitmap[cur_level] = (unsigned long long*)calloc(mNumWords, sizeof(unsigned long long));
                     }
                     if (!mLevCommaBitmap[cur_level]) {
-                        mLevCommaBitmap[cur_level] = (unsigned long*)calloc(mNumWords, sizeof(unsigned long));
+                        mLevCommaBitmap[cur_level] = (unsigned long long*)calloc(mNumWords, sizeof(unsigned long long));
                     }
                     if (colonbit) {
                         mLevColonBitmap[cur_level][top_word] = colonbit;
@@ -197,6 +198,7 @@ void SerialBitmap::indexConstruction() {
                 first = 1;
                 while (cb_mask || first) {
                     if (!cb_mask) {
+                        // COMMA COMES FROM HERE?????
                         second = 1UL<<63;
                     } else {
                         cb_bit = cb_mask & (-cb_mask);
@@ -204,14 +206,14 @@ void SerialBitmap::indexConstruction() {
                     }
                     if (cur_level >= 0 && cur_level <= mDepth) {
                         if (!mLevColonBitmap[cur_level]) {
-                            mLevColonBitmap[cur_level] = (unsigned long*)calloc(mNumWords, sizeof(unsigned long));
+                            mLevColonBitmap[cur_level] = (unsigned long long*)calloc(mNumWords, sizeof(unsigned long long));
                         }
                         if (!mLevCommaBitmap[cur_level]) {
-                            mLevCommaBitmap[cur_level] = (unsigned long*)calloc(mNumWords, sizeof(unsigned long));
+                            mLevCommaBitmap[cur_level] = (unsigned long long*)calloc(mNumWords, sizeof(unsigned long long));
                         }
-                        unsigned long mask = second - first;
+                        unsigned long long mask = second - first;
                         if (!cb_mask) mask = mask | second;
-                        unsigned long colon_mask = mask & colonbit;
+                        unsigned long long colon_mask = mask & colonbit;
                         if (colon_mask) {
                             mLevColonBitmap[cur_level][top_word] |= colon_mask;
                         } else {
@@ -224,7 +226,7 @@ void SerialBitmap::indexConstruction() {
                             }
                             else if (cb_bit == lb_bit && cur_level + 1 <= mDepth) {
                                 if (!mLevCommaBitmap[cur_level + 1]) {
-                                     mLevCommaBitmap[cur_level + 1] = (unsigned long*)calloc(mNumWords, sizeof(unsigned long));
+                                     mLevCommaBitmap[cur_level + 1] = (unsigned long long*)calloc(mNumWords, sizeof(unsigned long long));
                                 }
                                 mLevCommaBitmap[cur_level + 1][top_word] |= cb_bit;
                             }
@@ -238,7 +240,7 @@ void SerialBitmap::indexConstruction() {
                             if (cur_level == 0) {
                                 // JSON record could be an array
                                 if (!mLevCommaBitmap[cur_level]) {
-                                     mLevCommaBitmap[cur_level] = (unsigned long*)calloc(mNumWords, sizeof(unsigned long));
+                                     mLevCommaBitmap[cur_level] = (unsigned long long*)calloc(mNumWords, sizeof(unsigned long long));
                                 }
                                 mLevCommaBitmap[cur_level][top_word] |= cb_bit;
                             }

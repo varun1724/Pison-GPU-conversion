@@ -5,7 +5,7 @@
 
 SerialBitmap* SerialBitmapConstructor::construct(Record* record, int level_num) {
     char* record_text = NULL;
-    long length = 0;
+    long long length = 0;
     if (record->rec_start_pos > 0) record_text = record->text + record->rec_start_pos;
     else record_text = record->text;
     if (record->rec_length > 0) length = record->rec_length;

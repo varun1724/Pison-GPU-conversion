@@ -19,17 +19,17 @@ class SerialBitmap : public Bitmap {
   private:
     char* mRecord;
     // for a single large record, stream length equals to record length
-    long mRecordLength;
+    long long mRecordLength;
     // each temp word has 32 bytes
-    long mNumTmpWords;
+    long long mNumTmpWords;
     // each word has 64 bytes
-    long mNumWords;
+    long long mNumWords;
     // structural quote bitmap, used for key field parsing
-    unsigned long *mQuoteBitmap;
+    unsigned long long *mQuoteBitmap;
     // leveled colon bitmap
-    unsigned long *mLevColonBitmap[MAX_LEVEL];
+    unsigned long long *mLevColonBitmap[MAX_LEVEL];
     // leveled comma bitmap
-    unsigned long *mLevCommaBitmap[MAX_LEVEL];
+    unsigned long long *mLevCommaBitmap[MAX_LEVEL];
     // the deepest level of leveled bitmap indexes (starting from 0)
     int mDepth;
     
@@ -38,7 +38,7 @@ class SerialBitmap : public Bitmap {
     SerialBitmap(char* record, int level_num);
     ~SerialBitmap();
     void indexConstruction();
-    void setRecordLength(long length);
+    void setRecordLength(long long length);
  
   private:
     void freeMemory();

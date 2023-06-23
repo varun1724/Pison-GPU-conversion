@@ -10,7 +10,7 @@ void* aligned_malloc(size_t, size_t);
 // Opens binary files
 // First have to convert the data to binary files??
 Record* RecordLoader::loadSingleRecord(char* file_path) {
-    unsigned long size;
+    unsigned long long size;
     FILE* fp = fopen (file_path,"r");
     if (fp == NULL) {
         return NULL;

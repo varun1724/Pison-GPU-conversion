@@ -79,10 +79,10 @@ class SerialBitmapIterator : public BitmapIterator {
    
   private:
     // get positions of all colons between start_idx and end_idx from input stream
-    void generateColonPositions(long start_pos, long end_pos, int level, long* colon_positions, long& top_colon_positions);
+    void generateColonPositions(long long start_pos, long long end_pos, int level, long long* colon_positions, long long& top_colon_positions);
     // get positions of all commas between start_idx and end_idx from input stream
-    void generateCommaPositions(long start_pos, long end_pos, int level, long* comma_positions, long& top_comma_positions);
+    void generateCommaPositions(long long start_pos, long long end_pos, int level, long long* comma_positions, long long& top_comma_positions);
     // get starting and ending positions for a string
-    bool findFieldQuotePos(long colon_pos, long& start_pos, long& end_pos);
+    bool findFieldQuotePos(long long colon_pos, long long& start_pos, long long& end_pos);
 };
 #endif

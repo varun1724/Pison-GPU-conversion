@@ -1,14 +1,14 @@
 #include "SerialBitmapIterator.h"
 
-void SerialBitmapIterator::generateColonPositions(long start_pos, long end_pos, int level, long* colon_positions, long& top_colon_positions) {
-    unsigned long colonbit;
-    long st = start_pos / 64;
-    long ed = ceil(double(end_pos) / 64);
-    for (long i = st; i < ed; ++i) {
+void SerialBitmapIterator::generateColonPositions(long long start_pos, long long end_pos, int level, long long* colon_positions, long long& top_colon_positions) {
+    unsigned long long colonbit;
+    long long st = start_pos / 64;
+    long long ed = ceil(double(end_pos) / 64);
+    for (long long i = st; i < ed; ++i) {
         colonbit = mSerialBitmap->mLevColonBitmap[level][i];
         int cnt = __builtin_popcountl(colonbit);
         while (colonbit) {
-            long offset = i * 64 + __builtin_ctzll(colonbit);
+            long long offset = i * 64 + __builtin_ctzll(colonbit);
             if (start_pos <= offset && offset <= end_pos) {
                 colon_positions[++top_colon_positions] = offset;
             }
@@ -17,15 +17,15 @@ void SerialBitmapIterator::generateColonPositions(long start_pos, long end_pos, 
     }
 }
 
-void SerialBitmapIterator::generateCommaPositions(long start_pos, long end_pos, int level, long* comma_positions, long& top_comma_positions) {
-    unsigned long commabit;
-    long st = start_pos / 64;
-    long ed = ceil(double(end_pos) / 64);
-    for (long i = st; i < ed; ++i) {
+void SerialBitmapIterator::generateCommaPositions(long long start_pos, long long end_pos, int level, long long* comma_positions, long long& top_comma_positions) {
+    unsigned long long commabit;
+    long long st = start_pos / 64;
+    long long ed = ceil(double(end_pos) / 64);
+    for (long long i = st; i < ed; ++i) {
         commabit = mSerialBitmap->mLevCommaBitmap[level][i];
         int cnt = __builtin_popcountl(commabit);
         while (commabit) {
-            long offset = i * 64 + __builtin_ctzll(commabit);
+            long long offset = i * 64 + __builtin_ctzll(commabit);
             if (start_pos <= offset && offset <= end_pos) {
                 comma_positions[++top_comma_positions] = offset;
             }
@@ -34,16 +34,16 @@ void SerialBitmapIterator::generateCommaPositions(long start_pos, long end_pos, 
     }
 }
 
-bool SerialBitmapIterator::findFieldQuotePos(long colon_pos, long& start_pos, long& end_pos) {
-    long w_id = colon_pos/64;
-    long offset = colon_pos%64;
-    long start_quote = 0;
-    long end_quote = 0;
+bool SerialBitmapIterator::findFieldQuotePos(long long colon_pos, long long& start_pos, long long& end_pos) {
+    long long w_id = colon_pos/64;
+    long long offset = colon_pos%64;
+    long long start_quote = 0;
+    long long end_quote = 0;
     start_pos = 0; end_pos = 0;
     while (w_id >= 0)
     {
-        unsigned long quotebit = mSerialBitmap->mQuoteBitmap[w_id];
-        unsigned long offset = w_id * 64 + __builtin_ctzll(quotebit);
+        unsigned long long quotebit = mSerialBitmap->mQuoteBitmap[w_id];
+        unsigned long long offset = w_id * 64 + __builtin_ctzll(quotebit);
         while (quotebit && offset < colon_pos)
         {
             if (end_pos != 0)
@@ -109,21 +109,21 @@ bool SerialBitmapIterator::down() {
     if (mCurLevel < mTopLevel || mCurLevel > mSerialBitmap->mDepth) return false;
     ++mCurLevel;
     //cout<<"down function cur level "<<mCurLevel<<" "<<mTopLevel<<" "<<mSerialBitmap->mDepth<<endl;
-    long start_pos = -1;
-    long end_pos = -1;
+    long long start_pos = -1;
+    long long end_pos = -1;
     if (mCurLevel == mTopLevel + 1) {
         if (mTopLevel == -1) {
-            long record_length = mSerialBitmap->mRecordLength;
+            long long record_length = mSerialBitmap->mRecordLength;
             start_pos = 0;
             end_pos = record_length;
-            mCtxInfo[mCurLevel].positions = new long[record_length / 8 + 1]; 
+            mCtxInfo[mCurLevel].positions = new long long[record_length / 8 + 1]; 
             mPosArrAlloc[mCurLevel] = true;
         } else {
-            long cur_idx = mCtxInfo[mCurLevel - 1].cur_idx;
+            long long cur_idx = mCtxInfo[mCurLevel - 1].cur_idx;
             start_pos = mCtxInfo[mCurLevel - 1].positions[cur_idx];
             end_pos = mCtxInfo[mCurLevel - 1].positions[cur_idx + 1];
             if (mCtxInfo[mCurLevel].positions == NULL || mPosArrAlloc[mCurLevel] == false) {
-                mCtxInfo[mCurLevel].positions = new long[MAX_NUM_ELE / 8 + 1];
+                mCtxInfo[mCurLevel].positions = new long long[MAX_NUM_ELE / 8 + 1];
                 mPosArrAlloc[mCurLevel] = true;
             }
         }
@@ -131,7 +131,7 @@ bool SerialBitmapIterator::down() {
         mCtxInfo[mCurLevel].cur_idx = -1;
         mCtxInfo[mCurLevel].end_idx = -1; 
     } else {
-        long cur_idx = mCtxInfo[mCurLevel - 1].cur_idx;
+        long long cur_idx = mCtxInfo[mCurLevel - 1].cur_idx;
         if (cur_idx > mCtxInfo[mCurLevel - 1].end_idx) {
             --mCurLevel;
   //          cout<<"exception "<<cur_idx<<" "<<mCtxInfo[mCurLevel - 1].end_idx<<endl;
@@ -144,7 +144,7 @@ bool SerialBitmapIterator::down() {
         mCtxInfo[mCurLevel].cur_idx = mCtxInfo[mCurLevel - 1].end_idx;
         mCtxInfo[mCurLevel].end_idx = mCtxInfo[mCurLevel - 1].end_idx;
     }
-    long i = start_pos;
+    long long i = start_pos;
     if (start_pos > 0 || mCurLevel > 0) ++i;
     char ch = mSerialBitmap->mRecord[i];
     while (i < end_pos && (ch == ' ' || ch == '\n')) {
@@ -179,7 +179,7 @@ bool SerialBitmapIterator::isArray() {
 
 bool SerialBitmapIterator::moveNext() {
     if (mCurLevel < 0 || mCurLevel > mSerialBitmap->mDepth || mCtxInfo[mCurLevel].type != ARRAY) return false;
-    long next_idx = mCtxInfo[mCurLevel].cur_idx + 1;
+    long long next_idx = mCtxInfo[mCurLevel].cur_idx + 1;
     if (next_idx >= mCtxInfo[mCurLevel].end_idx) return false;
     mCtxInfo[mCurLevel].cur_idx = next_idx;
     return true;
@@ -187,11 +187,11 @@ bool SerialBitmapIterator::moveNext() {
 
 bool SerialBitmapIterator::moveToKey(char* key) {
     if (mCurLevel < 0 || mCurLevel > mSerialBitmap->mDepth || mCtxInfo[mCurLevel].type != OBJECT) return false;
-    long cur_idx = mCtxInfo[mCurLevel].cur_idx + 1;
-    long end_idx = mCtxInfo[mCurLevel].end_idx;
+    long long cur_idx = mCtxInfo[mCurLevel].cur_idx + 1;
+    long long end_idx = mCtxInfo[mCurLevel].end_idx;
     while (cur_idx < end_idx) {
-        long colon_pos = mCtxInfo[mCurLevel].positions[cur_idx];
-        long start_pos = 0, end_pos = 0;
+        long long colon_pos = mCtxInfo[mCurLevel].positions[cur_idx];
+        long long start_pos = 0, end_pos = 0;
         if (!findFieldQuotePos(colon_pos, start_pos, end_pos)) {
             return false;
         }
@@ -213,11 +213,11 @@ bool SerialBitmapIterator::moveToKey(char* key) {
 
 char* SerialBitmapIterator::moveToKey(unordered_set<char*>& key_set) {
     if (key_set.empty() == true|| mCurLevel < 0 || mCurLevel > mSerialBitmap->mDepth || mCtxInfo[mCurLevel].type != OBJECT) return NULL;
-    long cur_idx = mCtxInfo[mCurLevel].cur_idx + 1;
-    long end_idx = mCtxInfo[mCurLevel].end_idx;
+    long long cur_idx = mCtxInfo[mCurLevel].cur_idx + 1;
+    long long end_idx = mCtxInfo[mCurLevel].end_idx;
     while (cur_idx < end_idx) {
-        long colon_pos = mCtxInfo[mCurLevel].positions[cur_idx];
-        long start_pos = 0, end_pos = 0;
+        long long colon_pos = mCtxInfo[mCurLevel].positions[cur_idx];
+        long long start_pos = 0, end_pos = 0;
         if (!findFieldQuotePos(colon_pos, start_pos, end_pos)) {
             return NULL;
         }
@@ -255,7 +255,7 @@ int SerialBitmapIterator::numArrayElements() {
 
 bool SerialBitmapIterator::moveToIndex(int index) {
     if (mCurLevel < 0 || mCurLevel > mSerialBitmap->mDepth || mCtxInfo[mCurLevel].type != ARRAY) return false;
-    long next_idx = mCtxInfo[mCurLevel].start_idx + index;
+    long long next_idx = mCtxInfo[mCurLevel].start_idx + index;
     if (next_idx > mCtxInfo[mCurLevel].end_idx) return false;
     mCtxInfo[mCurLevel].cur_idx = next_idx;
     return true;
@@ -263,23 +263,23 @@ bool SerialBitmapIterator::moveToIndex(int index) {
 
 char* SerialBitmapIterator::getValue() {
     if (mCurLevel < 0 || mCurLevel > mSerialBitmap->mDepth) return NULL;
-    long cur_idx = mCtxInfo[mCurLevel].cur_idx;
-    long next_idx = cur_idx + 1;
+    long long cur_idx = mCtxInfo[mCurLevel].cur_idx;
+    long long next_idx = cur_idx + 1;
     if (next_idx > mCtxInfo[mCurLevel].end_idx) return NULL;
     // current ':' or ','
-    long cur_pos = mCtxInfo[mCurLevel].positions[cur_idx];
+    long long cur_pos = mCtxInfo[mCurLevel].positions[cur_idx];
     // next ':' or ','
-    long next_pos = mCtxInfo[mCurLevel].positions[next_idx];
+    long long next_pos = mCtxInfo[mCurLevel].positions[next_idx];
     int type = mCtxInfo[mCurLevel].type;
     if (type == OBJECT && next_idx < mCtxInfo[mCurLevel].end_idx) {
-        long start_pos = 0, end_pos = 0;
+        long long start_pos = 0, end_pos = 0;
         if (findFieldQuotePos(next_pos, start_pos, end_pos) == false) {
             return (char*)"";
         }
         // next quote
         next_pos = start_pos;
     }
-    long text_length = next_pos - cur_pos - 1;
+    long long text_length = next_pos - cur_pos - 1;
     if (text_length <= 0) return (char*)"";
     char* ret = (char*)malloc(text_length + 1);
 ///    cout<<"cur pos "<<(cur_pos + 1)<<" length "<<text_length<<endl;

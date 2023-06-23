@@ -28,11 +28,11 @@ class Tokenizer {
     // OUT -- outside string
     int mStartState;
     // current position of mText
-    long mCurPos;
+    long long mCurPos;
     // current token type
     int mCurTknType;
     // starting position of the next token
-    long mNextTknPos;
+    long long mNextTknPos;
   public:
     Tokenizer() {}
 

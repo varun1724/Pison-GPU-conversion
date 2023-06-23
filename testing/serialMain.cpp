@@ -9,10 +9,10 @@ string query(BitmapIterator* iter) {
         unordered_set<char*> set;
 
         set.insert((char*)"user");
-        set.insert((char*)"retweet_count");
+        set.insert((char*)"text");
         char* key = NULL;
         while ((key = iter->moveToKey(set)) != NULL) {
-            if (strcmp(key, "retweet_count") == 0) {
+            if (strcmp(key, "text") == 0) {
                 // value of "retweet_count"
                 char* value = iter->getValue();
                 output.append(value).append(";");
@@ -33,11 +33,11 @@ string query(BitmapIterator* iter) {
 }
 
 int main() {
-    cout << "Program reaches here" << endl;
+
     const char* file_path = "dataset/twitter_sample_small_records.json";
     RecordSet* record_set = RecordLoader::loadRecords(file_path);
     if (record_set->size() == 0) {
-        cout<<"record loading fails."<<endl;
+        cout << "record loading fails." << endl;
         return -1;
     }
     string output = "";
@@ -56,19 +56,23 @@ int main() {
      */
     int num_recs = record_set->size();
     Bitmap* bm = NULL; 
-    cout << "Num_recs: " << num_recs << endl;
-    int counter = 0;
+    //cout << "Num_recs: " << num_recs << endl;
+    //int counter = 0;
     for (int i = 0; i < num_recs; i++) {
-        cout << "Counter:" << counter << endl;
-        ++counter;
+        //cout << "Counter:" << counter << endl;
+        //++counter;
         bm = BitmapConstructor::construct((*record_set)[i], thread_num, level_num);
         BitmapIterator* iter = BitmapConstructor::getIterator(bm);
-        output.append(query(iter));
+        string out = query(iter);
+        cout << "String output: " << out << endl;
+        output.append(out);
         delete iter;
     }
+    
+    //cout << "matches are: " << output << endl;
+
     delete bm;
     delete record_set;
-    
-    cout<<"matches are: "<<output<<endl;
+
     return 0;
 }

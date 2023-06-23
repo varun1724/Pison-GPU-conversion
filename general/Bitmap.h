@@ -16,7 +16,7 @@ class Bitmap {
     Bitmap() {
         type = SEQUENTIAL;
     }
-    virtual void setRecordLength(long length) {}
+    virtual void setRecordLength(double length) {}
     virtual void indexConstruction() {}
     virtual void setStreamFlag(bool flag) {}
     virtual ~Bitmap() {}

@@ -15,8 +15,8 @@ struct Record {
     // contacting them into one single string generates the best
     // performance for indexing and querying
     char* text;
-    long rec_start_pos;
-    long rec_length;
+    long long rec_start_pos;
+    long long rec_length;
     // text could be shared among different Record objects
     // (e.g. line-delimited JSON stream with a sequence of records)
     bool can_delete_text;
@@ -42,7 +42,7 @@ class RecordSet {
     friend class RecordLoader;
   public:
     vector<Record*> recs;
-    long num_recs;
+    long long num_recs;
 
   public:
     RecordSet() {
@@ -50,19 +50,19 @@ class RecordSet {
     }
 
     // record can be accessed in array style.
-    Record*& operator[] (long idx) {
+    Record*& operator[] (long long idx) {
         if (idx >= 0 && idx < num_recs)
             return recs[idx];
         cout << "Array index in RecordSet out of bound."<< endl; 
         exit(0); 
     }
 
-    long size() {
+    long long size() {
         return num_recs;
     }
 
     ~RecordSet() {
-        for (long i = 0; i < num_recs; ++i) {
+        for (long long i = 0; i < num_recs; ++i) {
             if (recs[i] != NULL)
                 delete recs[i];
         }

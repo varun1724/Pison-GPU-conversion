@@ -5,7 +5,9 @@
 #include "Bitmap.h"
 #include "BitmapIterator.h"
 #include "../serialSpec/SerialBitmapConstructor.h"
+//#include "ParallelBitmapConstructor.h"
 #include "../serialSpec/SerialBitmapIterator.h"
+//#include "ParallelBitmapIterator.h"
 #include "Records.h"
 using namespace std;
 

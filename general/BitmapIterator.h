@@ -21,20 +21,20 @@ struct IterCtxInfo {
     // OBJECT or ARRAY
     int type;
     // position array for colon and comma
-    long* positions;
+    long long* positions;
     // start index of the record position array at the current level
-    long start_idx;
+    long long start_idx;
     // end index of the record position array at the current level
-    long end_idx;
+    long long end_idx;
     // current index of the record position array at the current level
-    long cur_idx;
+    long long cur_idx;
     // the current level
     int level;
 };
 
 struct KeyPos {
-    long start;
-    long end;
+    long long start;
+    long long end;
 };
 
 class BitmapIterator {
