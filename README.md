@@ -11,6 +11,14 @@ For running the first parallel parsind method test:
 To clean the program:
 - make clean
 
+# Google Colab Instructions
+- Select the block of code directly below the "Running serial test code" text
+- At the top left, select "runtime" then "run before"
+- Run the blocks for desired tests (may have to change path of the dataset to your local path in your drive)
+
+#Link to datasets
+- [datasets](https://drive.google.com/drive/folders/1KQ1DjvIWpHikOg1JgmjlSWM3aAlvq-h7)
+
 # Parallel Thread Testing results
 
 Measured in microseconds (average of 3 runs)
@@ -20,3 +28,6 @@ Measured in microseconds (average of 3 runs)
 - 8 Threads: ~445000
 - 12 Threads: ~432000
 - 16 Threads: ~445000
+
+# Credits
+- Code expanded from [AutomataLab](https://github.com/AutomataLab/Pison)
