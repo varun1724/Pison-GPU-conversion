@@ -3,7 +3,6 @@
 
 #include "Bitmap.h"
 #include <unordered_set>
-using namespace std;
 
 class Bitmap;
 
@@ -65,7 +64,7 @@ class BitmapIterator {
     virtual bool moveToKey(char* key) = 0;
     // Moves to the corresponding key fields inside the current object, returns the current key name.
     // After this operation, the current key field will be removed from key_set.
-    virtual char* moveToKey(unordered_set<char*>& key_set) = 0;
+    virtual char* moveToKey(std::unordered_set<char*>& key_set) = 0;
     // Returns the number of elements inside current array.
     virtual int numArrayElements() = 0;
     // If the current record is an array, moves to an item based on index.

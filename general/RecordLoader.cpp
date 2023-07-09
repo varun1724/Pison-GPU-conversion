@@ -1,7 +1,6 @@
 #include <sys/time.h>
 #include <fstream>
 #include "RecordLoader.h"
-using namespace std;
 
 #define MAX_PAD 64
 
@@ -9,34 +8,35 @@ void* aligned_malloc(size_t, size_t);
 
 // Opens binary files
 // First have to convert the data to binary files??
-Record* RecordLoader::loadSingleRecord(char* file_path) {
+Record* RecordLoader::loadSingleRecord(const char* file_path) {
     unsigned long long size;
-    FILE* fp = fopen (file_path,"r");
+    FILE* fp = fopen(file_path, "r");
     if (fp == NULL) {
         return NULL;
     }
-    fseek (fp, 0, SEEK_END);
+    fseek(fp, 0, SEEK_END);
     size = ftell(fp);
     rewind(fp);
-    void* p = __mingw_aligned_malloc(64, (size + MAX_PAD)*sizeof(char));
+
+    void* p = aligned_malloc(64, (size + MAX_PAD) * sizeof(char));
     if (p == NULL) {
-        cout<<"Fail to allocate memory space for input record."<<endl;
+        std::cout << "Fail to allocate memory space for input record." << std::endl;
     }
-    char* record_text = (char*) p;
-    size_t load_size = fread (record_text, 1, size, fp);
+    char* record_text = static_cast<char*>(p);
+    size_t load_size = fread(record_text, 1, size, fp);
     if (load_size == 0) {
-        cout<<"Fail to load the input record into memory"<<endl;
+        std::cout << "Fail to load the input record into memory" << std::endl;
     }
     int remain = 64 - (size % 64);
     int counter = 0;
     // pad the input data where its size can be divided by 64
-    while (counter < remain)
-    {
-        record_text[size+counter] = 'd';
+    while (counter < remain) {
+        record_text[size + counter] = 'd';
         counter++;
     }
-    record_text[size+counter]='\0';
+    record_text[size + counter] = '\0';
     fclose(fp);
+
     // only one single record
     Record* record = new Record();
     record->text = record_text;
@@ -52,7 +52,7 @@ RecordSet* RecordLoader::loadRecords(const char* file_path) {
     RecordSet* rs = new RecordSet();
     if (fp) {
         char line[MAX_RECORD_SIZE];
-        string str;
+        std::string str;
         int start_pos = 0;
         while (fgets(line, sizeof(line), fp) != NULL) {
             if (strlen(line) <= MIN_RECORD_SIZE) continue;
@@ -77,7 +77,7 @@ RecordSet* RecordLoader::loadRecords(const char* file_path) {
         void* p = aligned_malloc(64, str.size()*sizeof(char));
         //void* p;
         if (p == NULL) {
-            cout<<"Fail to allocate memory space for records from input file."<<endl;
+            std::cout<<"Fail to allocate memory space for records from input file."<<std::endl;
         }
         for (int i = 0; i < rs->recs.size(); ++i) {
             // all record objects points to the same input text which contacts a sequence of JSON records
@@ -90,7 +90,7 @@ RecordSet* RecordLoader::loadRecords(const char* file_path) {
         return rs;
     }
     printf("Error: %d (%s)\n", errno, strerror(errno));
-    cout<<"Fail open the file."<<endl;
+    std::cout<<"Fail open the file."<<std::endl;
     return rs;
 }
 

@@ -1,12 +1,12 @@
- #include "../general/RecordLoader.h"
+#include "../general/RecordLoader.h"
 #include "../general/BitmapIterator.h"
 #include "../general/BitmapConstructor.h"
 
 // {$.user.id, $.retweet_count}
-string query(BitmapIterator* iter) {
-    string output = "";
+std::string query(BitmapIterator* iter) {
+    std::string output = "";
     if (iter->isObject()) {
-        unordered_set<char*> set;
+        std::unordered_set<char*> set;
 
         set.insert((char*)"user");
         set.insert((char*)"text");
@@ -33,29 +33,29 @@ string query(BitmapIterator* iter) {
 }
 
 int main() {
-
+    // PATH TO LARGE RECORD = "/content/drive/MyDrive/pthreads/data/twitter_small_records.json"
     const char* file_path = "dataset/twitter_sample_small_records.json";
     RecordSet* record_set = RecordLoader::loadRecords(file_path);
     if (record_set->size() == 0) {
-        cout << "record loading fails." << endl;
+        std::cout << "record loading fails." << std::endl;
         return -1;
     }
-    string output = "";
-    
+    std::string output = "";
+
     // set the number of threads for parallel bitmap construction
-    int thread_num = 1;  
-   
+    int thread_num = 1;
+
     /* set the number of levels of bitmaps to create, either based on the
      * query or the JSON records. E.g., query $[*].user.id needs three levels
      * (level 0, 1, 2), but the record may be of more than three levels
      */
     int level_num = 2;
- 
-    /* process the records one by one: for each one, first build bitmap, then perform 
+
+    /* process the records one by one: for each one, first build bitmap, then perform
      * the query with a bitmap iterator
      */
     int num_recs = record_set->size();
-    Bitmap* bm = NULL; 
+    Bitmap* bm = NULL;
     //cout << "Num_recs: " << num_recs << endl;
     //int counter = 0;
     for (int i = 0; i < num_recs; i++) {
@@ -63,16 +63,15 @@ int main() {
         //++counter;
         bm = BitmapConstructor::construct((*record_set)[i], thread_num, level_num);
         BitmapIterator* iter = BitmapConstructor::getIterator(bm);
-        string out = query(iter);
-        cout << "String output: " << out << endl;
+        std::string out = query(iter);
+        std::cout << "String output: " << out << std::endl;
         output.append(out);
         delete iter;
     }
-    
+
     //cout << "matches are: " << output << endl;
 
     delete bm;
-    delete record_set;
 
     return 0;
 }

@@ -1,6 +1,5 @@
 #include "Tokenizer.h"
 #include <iostream>
-using namespace std;
 
 int Tokenizer::getStringToken(int& pos) {
     while (pos < 64) {

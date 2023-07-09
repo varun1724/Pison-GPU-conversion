@@ -211,7 +211,7 @@ bool SerialBitmapIterator::moveToKey(char* key) {
     return false;
 }
 
-char* SerialBitmapIterator::moveToKey(unordered_set<char*>& key_set) {
+char* SerialBitmapIterator::moveToKey(std::unordered_set<char*>& key_set) {
     if (key_set.empty() == true|| mCurLevel < 0 || mCurLevel > mSerialBitmap->mDepth || mCtxInfo[mCurLevel].type != OBJECT) return NULL;
     long long cur_idx = mCtxInfo[mCurLevel].cur_idx + 1;
     long long end_idx = mCtxInfo[mCurLevel].end_idx;
@@ -223,7 +223,7 @@ char* SerialBitmapIterator::moveToKey(unordered_set<char*>& key_set) {
         }
         ++mVisitedFields;
         bool has_m_key = false;
-        unordered_set<char*>::iterator iter;
+        std::unordered_set<char*>::iterator iter;
         for (iter = key_set.begin(); iter != key_set.end(); ++iter) {
             char* key = (*iter);
             int key_size = end_pos - start_pos - 1;

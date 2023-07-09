@@ -13,7 +13,6 @@
 #include <immintrin.h>
 #include "Bitmap.h"
 #include "Tokenizer.h"
-using namespace std;
 
 class LocalBitmap : public Bitmap {
     friend class ParallelBitmap;

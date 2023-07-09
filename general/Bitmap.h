@@ -2,7 +2,6 @@
 #define BITMAP_H
 
 #include <iostream>
-using namespace std;
 
 #define MAX_LEVEL 22
 #define SEQUENTIAL 1

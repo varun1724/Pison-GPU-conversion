@@ -12,7 +12,6 @@
 #include <math.h>
 #include <immintrin.h>
 #include "../general/Bitmap.h"
-using namespace std;
 
 class SerialBitmap : public Bitmap {
     friend class SerialBitmapIterator;

@@ -1,5 +1,5 @@
 #ifndef TOKENIZER_H
-#define TOKENIZER_H
+#define TONENIZER_H
 
 #define IN 10
 #define OUT 11
@@ -17,7 +17,7 @@
 #define COLON 6 //':'
 #define PRI 7   //primitive
 #define STRING 8 // "abc"
-#define UNKNOWN 9 
+#define UNKNOWN 9
 #define INVALID -1  //invalid
 
 class Tokenizer {
@@ -28,11 +28,11 @@ class Tokenizer {
     // OUT -- outside string
     int mStartState;
     // current position of mText
-    long long mCurPos;
+    long mCurPos;
     // current token type
     int mCurTknType;
     // starting position of the next token
-    long long mNextTknPos;
+    long mNextTknPos;
   public:
     Tokenizer() {}
 

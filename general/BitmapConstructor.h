@@ -5,11 +5,10 @@
 #include "Bitmap.h"
 #include "BitmapIterator.h"
 #include "../serialSpec/SerialBitmapConstructor.h"
-//#include "ParallelBitmapConstructor.h"
+#include "../parallelSpec/ParallelBitmapConstructor.h"
 #include "../serialSpec/SerialBitmapIterator.h"
-//#include "ParallelBitmapIterator.h"
+#include "../parallelSpec/ParallelBitmapIterator.h"
 #include "Records.h"
-using namespace std;
 
 class BitmapConstructor {
   public:

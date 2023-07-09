@@ -18,7 +18,6 @@
 #include <unistd.h>
 #include <sched.h>
 #include <unordered_map>
-using namespace std;
 
 LocalBitmap::LocalBitmap() {
 

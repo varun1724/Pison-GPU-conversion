@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <vector>
 #include <iostream>
-using namespace std;
 
 #define MIN_RECORD_SIZE 5
 #define MAX_RECORD_SIZE 1000000
@@ -41,7 +40,7 @@ struct Record {
 class RecordSet {
     friend class RecordLoader;
   public:
-    vector<Record*> recs;
+    std::vector<Record*> recs;
     long long num_recs;
 
   public:
@@ -53,7 +52,7 @@ class RecordSet {
     Record*& operator[] (long long idx) {
         if (idx >= 0 && idx < num_recs)
             return recs[idx];
-        cout << "Array index in RecordSet out of bound."<< endl; 
+        std::cout << "Array index in RecordSet out of bound."<< std::endl; 
         exit(0); 
     }
 
