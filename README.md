@@ -1,4 +1,4 @@
-To run the code:
+# Running Code
 
 For running the first serialized parsing method test: 
 - make bin/serialMain1
