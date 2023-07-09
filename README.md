@@ -14,7 +14,7 @@ To clean the program:
 # Google Colab Instructions
 - Select the block of code directly below the "Running serial test code" text
 - At the top left, select "runtime" then "run before"
-- Run the blocks for desired tests (may have to change path of the dataset to your local path in your drive)
+- Run the blocks for desired tests (may have to change path of the dataset to a local path in your drive)
 
 #Link to datasets
 - [datasets](https://drive.google.com/drive/folders/1KQ1DjvIWpHikOg1JgmjlSWM3aAlvq-h7)
