@@ -12,11 +12,12 @@ To clean the program:
 - make clean
 
 # Google Colab Instructions
+- Colab Link: [Link](https://colab.research.google.com/drive/18--FiI1plY0zcfotksfCTMztUhIKcAiQ?usp=sharing)
 - Select the block of code directly below the "Running serial test code" text
 - At the top left, select "runtime" then "run before"
 - Run the blocks for desired tests (may have to change path of the dataset to a local path in your drive)
 
-#Link to datasets
+Link to datasets
 - [datasets](https://drive.google.com/drive/folders/1KQ1DjvIWpHikOg1JgmjlSWM3aAlvq-h7)
 
 # Parallel Thread Testing results
