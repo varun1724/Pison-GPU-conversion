@@ -1,6 +1,8 @@
+#include <chrono>
 #include "../general/RecordLoader.h"
 #include "../general/BitmapIterator.h"
 #include "../general/BitmapConstructor.h"
+using namespace std::chrono;
 
 // {$.user.id, $.retweet_count}
 std::string query(BitmapIterator* iter) {
@@ -33,8 +35,8 @@ std::string query(BitmapIterator* iter) {
 }
 
 int main() {
-    // PATH TO LARGE RECORD = "/content/drive/MyDrive/pthreads/data/twitter_small_records.json"
-    const char* file_path = "dataset/twitter_sample_small_records.json";
+    // PATH TO LOCAL SAMPLE SMALL RECORD = "dataset/twitter_sample_smalle_record.json"
+    const char* file_path = "/content/drive/MyDrive/pthreads/data/twitter_small_records.json";
     RecordSet* record_set = RecordLoader::loadRecords(file_path);
     if (record_set->size() == 0) {
         std::cout << "record loading fails." << std::endl;
@@ -58,18 +60,27 @@ int main() {
     Bitmap* bm = NULL;
     //cout << "Num_recs: " << num_recs << endl;
     //int counter = 0;
+
+     // Start clock to measure speeds
+    auto start = high_resolution_clock::now();
+
     for (int i = 0; i < num_recs; i++) {
         //cout << "Counter:" << counter << endl;
         //++counter;
         bm = BitmapConstructor::construct((*record_set)[i], thread_num, level_num);
         BitmapIterator* iter = BitmapConstructor::getIterator(bm);
         std::string out = query(iter);
-        std::cout << "String output: " << out << std::endl;
+        // std::cout << "String output: " << out << std::endl;
         output.append(out);
         delete iter;
     }
 
-    //cout << "matches are: " << output << endl;
+    // End clock
+    auto stop = high_resolution_clock::now();
+    auto duration = duration_cast<microseconds>(stop - start);
+    cout << "Duration: " << duration.count() << endl;
+
+    // std::cout << "matches are: " << output << std::endl;
 
     delete bm;
 

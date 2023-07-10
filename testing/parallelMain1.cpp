@@ -25,7 +25,7 @@ std::string query(BitmapIterator* iter) {
 }
 
 int main() {
-    // PATH TO SAMPLE TEST FILE: "dataset/twitter_sample_large_record.json"
+    // PATH TO LOCAL SAMPLE TEST FILE: "dataset/twitter_sample_large_record.json"
     const char* file_path = "/content/drive/MyDrive/pthreads/data/twitter_large_record.json";
     Record* rec = RecordLoader::loadSingleRecord(file_path);
     if (rec == NULL) {
@@ -61,7 +61,7 @@ int main() {
     cout << "Duration: " << duration.count() << endl;
 
     // Uncomment to see matches
-    //std::cout << "matches are: " << output << std::endl;
+    // std::cout << "matches are: " << output << std::endl;
 
     delete iter;
     delete bm;
