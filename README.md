@@ -12,7 +12,7 @@ To clean the program:
 - make clean
 
 # Google Colab Instructions
-- Colab Link: [Link](https://colab.research.google.com/drive/18--FiI1plY0zcfotksfCTMztUhIKcAiQ?usp=sharing)
+- Colab Link: [Link](https://colab.research.google.com/drive/1YEjbOrPNK4vAB8wZjnxE2GitxeLrfQAi)
 - Select the block of code directly below the "Running serial test code" text
 - At the top left, select "runtime" then "run before"
 - Run the blocks for desired tests (may have to change path of the dataset to a local path in your drive)
@@ -20,7 +20,7 @@ To clean the program:
 Link to datasets
 - [datasets](https://drive.google.com/drive/folders/1KQ1DjvIWpHikOg1JgmjlSWM3aAlvq-h7)
 
-# Parallel Thread Testing results
+# Parallel Thread Testing Results on Large Dataset
 
 Measured in microseconds (average of 3 runs)
 
@@ -29,6 +29,12 @@ Measured in microseconds (average of 3 runs)
 - 8 Threads: ~445000
 - 12 Threads: ~432000
 - 16 Threads: ~445000
+
+# Serial Testing Results on Large Dataset
+
+Measured in microseconds (average of 3 runs)
+
+- ~970000
 
 # Credits
 - Code expanded from [AutomataLab](https://github.com/AutomataLab/Pison)
